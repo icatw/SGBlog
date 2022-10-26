@@ -20,6 +20,7 @@ public enum AppHttpCodeEnum {
     EMAIL_EXIST(503, "邮箱已存在"),
     REQUIRE_USERNAME(504, "必需填写用户名"),
     LOGIN_ERROR(505, "用户名或密码错误"),
+    FILE_TYPE_ERROR(600, "只能上传png格式的图片！"),
     CONTENT_NOT_NULL(506, "评论不能为空");
     int code;
     String msg;
