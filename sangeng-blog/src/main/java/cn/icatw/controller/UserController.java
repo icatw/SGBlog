@@ -6,6 +6,7 @@ import cn.icatw.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author icatw
@@ -27,5 +28,10 @@ public class UserController {
     @PutMapping("/userInfo")
     public ResponseResult updateUserInfo(@RequestBody User user) {
         return userService.updateUserInfo(user);
+    }
+
+    @PostMapping("/register")
+    public ResponseResult register(@RequestBody @Valid User user) {
+        return userService.register(user);
     }
 }
