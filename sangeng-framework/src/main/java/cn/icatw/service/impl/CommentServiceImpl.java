@@ -38,9 +38,32 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
         //先查询文章的根评论 root_id为-1
+        return getCommentList(articleId, SystemConstants.ARTICLE_COMMENT, pageNum, pageSize);
+    }
+
+    @Override
+    public ResponseResult pushComment(Comment comment) {
+        //评论内容不能为空
+        if (!StringUtils.hasText(comment.getContent())) {
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        save(comment);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult linkCommentList(Long articleId, Integer pageNum, Integer pageSize) {
+        return getCommentList(articleId, SystemConstants.LINK_COMMENT, pageNum, pageSize);
+    }
+
+    private ResponseResult getCommentList(Long articleId, String commentType, Integer pageNum, Integer pageSize) {
+        //先查询文章的根评论 root_id为-1
+        //TODO 如果type为1，表示查询友联评论，则无需添加文章id条件
         LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Comment::getArticleId, articleId)
-                .eq(Comment::getRootId, SystemConstants.COMMENT_ROOT_ID);
+                .eq(Comment::getRootId, SystemConstants.COMMENT_ROOT_ID)
+                .eq(Comment::getType, commentType)
+                .orderByDesc(Comment::getCreateTime);
         Page<Comment> page = new Page<>(pageNum, pageSize);
         Page<Comment> commentPage = page(page, lambdaQueryWrapper);
         //根评论
@@ -53,16 +76,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         result.setRows(commentVos);
         result.setTotal(page.getTotal());
         return ResponseResult.okResult(result);
-    }
-
-    @Override
-    public ResponseResult pushComment(Comment comment) {
-        //评论内容不能为空
-        if(!StringUtils.hasText(comment.getContent())){
-            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
-        }
-        save(comment);
-        return ResponseResult.okResult();
     }
 
     private void getAndSetChildren(CommentVo comment) {

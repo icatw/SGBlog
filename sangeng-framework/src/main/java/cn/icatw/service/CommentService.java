@@ -30,5 +30,15 @@ public interface CommentService extends IService<Comment> {
      * @return {@link ResponseResult}
      */
     ResponseResult pushComment(Comment comment);
+
+    /**
+     * 链接评论列表
+     *
+     * @param articleId 文章id
+     * @param pageNum   页面num
+     * @param pageSize  页面大小
+     * @return {@link ResponseResult}
+     */
+    ResponseResult linkCommentList(Long articleId, Integer pageNum, Integer pageSize);
 }
 
