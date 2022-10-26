@@ -1,10 +1,9 @@
 package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.entity.User;
 import cn.icatw.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,5 +22,10 @@ public class UserController {
     @GetMapping("/userInfo")
     public ResponseResult userInfo() {
         return userService.getUserInfo();
+    }
+
+    @PutMapping("/userInfo")
+    public ResponseResult updateUserInfo(@RequestBody User user) {
+        return userService.updateUserInfo(user);
     }
 }

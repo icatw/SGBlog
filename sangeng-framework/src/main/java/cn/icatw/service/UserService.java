@@ -19,5 +19,13 @@ public interface UserService extends IService<User> {
      * @return {@link ResponseResult}
      */
     ResponseResult getUserInfo();
+
+    /**
+     * 更新用户信息
+     *
+     * @param userInfoVo 用户信息签证官
+     * @return {@link ResponseResult}
+     */
+    ResponseResult updateUserInfo(User userInfoVo);
 }
 
