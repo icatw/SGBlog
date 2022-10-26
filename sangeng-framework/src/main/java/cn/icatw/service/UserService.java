@@ -1,5 +1,6 @@
 package cn.icatw.service;
 
+import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * 获取用户信息
+     *
+     * @return {@link ResponseResult}
+     */
+    ResponseResult getUserInfo();
 }
 
