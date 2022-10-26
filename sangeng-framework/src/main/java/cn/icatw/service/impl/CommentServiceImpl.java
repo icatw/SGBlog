@@ -6,6 +6,8 @@ import cn.icatw.domain.entity.Comment;
 import cn.icatw.domain.entity.User;
 import cn.icatw.domain.vo.CommentVo;
 import cn.icatw.domain.vo.PageVo;
+import cn.icatw.enums.AppHttpCodeEnum;
+import cn.icatw.exception.SystemException;
 import cn.icatw.mapper.CommentMapper;
 import cn.icatw.service.CommentService;
 import cn.icatw.service.UserService;
@@ -16,6 +18,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -50,6 +53,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         result.setRows(commentVos);
         result.setTotal(page.getTotal());
         return ResponseResult.okResult(result);
+    }
+
+    @Override
+    public ResponseResult pushComment(Comment comment) {
+        //评论内容不能为空
+        if(!StringUtils.hasText(comment.getContent())){
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     private void getAndSetChildren(CommentVo comment) {

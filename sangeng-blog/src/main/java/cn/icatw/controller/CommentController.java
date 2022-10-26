@@ -1,11 +1,10 @@
 package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.entity.Comment;
 import cn.icatw.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author icatw
@@ -22,5 +21,10 @@ public class CommentController {
     @GetMapping("/commentList")
     public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
         return commentService.commentList(articleId, pageNum, pageSize);
+    }
+
+    @PostMapping
+    public ResponseResult pushComment(@RequestBody Comment comment) {
+        return commentService.pushComment(comment);
     }
 }
