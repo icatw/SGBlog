@@ -31,6 +31,7 @@ public class SystemConstants {
      * redis的登陆用户key
      */
     public static final String LOGIN_KEY = "bloglogin:";
+    public static final String ADMIN_LOGIN_KEY = "adminbloglogin:";
     /**
      * 评论类型为：文章评论
      */
