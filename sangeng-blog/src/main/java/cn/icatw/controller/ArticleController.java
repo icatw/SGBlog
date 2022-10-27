@@ -1,5 +1,6 @@
 package cn.icatw.controller;
 
+import cn.icatw.annotation.UpdateViewCount;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +55,13 @@ public class ArticleController {
      * @return {@link ResponseResult}
      */
     @GetMapping("{id}")
+    @UpdateViewCount
     public ResponseResult getArticleDetail(@PathVariable("id") Long id) {
         return articleService.getArticleDetail(id);
     }
 
-    @PutMapping("/updateViewCount/{id}")
-    public ResponseResult updateViewCount(@PathVariable("id") Long id) {
-        return articleService.updateViewCount(id);
-    }
+    //@PutMapping("/updateViewCount/{id}")
+    //public ResponseResult updateViewCount(@PathVariable("id") Long id) {
+    //    return articleService.updateViewCount(id);
+    //}
 }
