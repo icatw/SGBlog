@@ -1,5 +1,6 @@
 package cn.icatw.controller;
 
+import cn.icatw.annotation.SysLog;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.User;
 import cn.icatw.service.BlogLoginService;
@@ -20,11 +21,13 @@ public class BlogLoginController {
     private BlogLoginService blogLoginService;
 
     @PostMapping("/login")
+    @SysLog(businessName = "用户登陆")
     public ResponseResult login(@RequestBody User user) {
         return blogLoginService.login(user);
     }
 
     @PostMapping("/logout")
+    @SysLog(businessName = "用户注销")
     public ResponseResult logout() {
 
         return blogLoginService.logout();

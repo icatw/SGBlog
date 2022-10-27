@@ -1,5 +1,6 @@
 package cn.icatw.controller;
 
+import cn.icatw.annotation.SysLog;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ public class UploadController {
     private UploadService uploadService;
 
     @PostMapping("/upload")
+    @SysLog(businessName = "上传头像")
     public ResponseResult uploadImg(MultipartFile img){
         return uploadService.uploadImg(img);
     }

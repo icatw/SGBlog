@@ -32,10 +32,8 @@ public class LogAspect {
     @Autowired
     LogService logService;
 
-
     @Pointcut("@annotation(cn.icatw.annotation.SysLog)")
     public void pt() {
-
     }
 
     @Around("pt()")
