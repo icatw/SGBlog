@@ -27,7 +27,7 @@ public class ViewCountJob {
     @Resource
     RedisCache redisCache;
 
-    @Scheduled(cron = "0 0/1 * * * ? ")
+    @Scheduled(cron = "0 0/10 * * * ? ")
     public void updateViewCount() {
         //更新浏览量
         //    先从Redis中获取浏览量map  id和view_count
