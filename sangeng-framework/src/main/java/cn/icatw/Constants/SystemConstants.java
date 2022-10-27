@@ -39,5 +39,9 @@ public class SystemConstants {
      * 评论类型为：友联评论
      */
     public static final String LINK_COMMENT = "1";
+    /**
+     * redis浏览量key
+     */
+    public static final String VIEW_COUNT_KEY = "article:viewCount";
 
 }

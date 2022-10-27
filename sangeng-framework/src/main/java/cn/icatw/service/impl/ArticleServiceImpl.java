@@ -13,6 +13,7 @@ import cn.icatw.mapper.ArticleMapper;
 import cn.icatw.service.ArticleService;
 import cn.icatw.service.CategoryService;
 import cn.icatw.utils.BeanCopyUtils;
+import cn.icatw.utils.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -32,6 +34,8 @@ import java.util.Objects;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
     @Resource
     CategoryService categoryService;
+    @Resource
+    RedisCache redisCache;
 
     /**
      * 热门文章列表
@@ -93,10 +97,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         Article article = getById(id);
         //设置分类名 TODO 非空判断
+        //查询文章详情时从Redis中获取
         Category category = categoryService.getById(article.getCategoryId());
         if (category != null) {
             article.setCategoryName(category.getName());
         }
+        Map<String, Integer> map = redisCache.getCacheMap(SystemConstants.VIEW_COUNT_KEY);
+        if (map.containsKey(id.toString())) {
+            Integer viewCount = map.get(id.toString());
+            article.setViewCount(Long.valueOf(viewCount));
+        }
         return ResponseResult.okResult(BeanCopyUtils.copyBean(article, ArticleDetailVo.class));
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        //更新redis中对应 id的浏览量
+        redisCache.incrementCacheMapValue(SystemConstants.VIEW_COUNT_KEY, id.toString(), 1);
+        return ResponseResult.okResult();
     }
 }
