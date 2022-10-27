@@ -2,6 +2,7 @@ package cn.icatw.service;
 
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.User;
+import cn.icatw.domain.vo.AdminUserInfoVo;
 
 /**
  * @author icatw
@@ -24,4 +25,13 @@ public interface LoginService {
      * @return {@link ResponseResult}
      */
     ResponseResult logout();
+
+    /**
+     * 得到信息
+     *
+     * @param userId 用户id
+     * @return {@link AdminUserInfoVo}
+     */
+    AdminUserInfoVo getInfo(Long userId);
+
 }

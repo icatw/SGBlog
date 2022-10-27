@@ -45,4 +45,6 @@ public class SystemConstants {
      */
     public static final String VIEW_COUNT_KEY = "article:viewCount";
 
+    public static final String MENU = "C";
+    public static final String BUTTON = "F";
 }

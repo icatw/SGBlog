@@ -4,11 +4,17 @@ import cn.icatw.Constants.SystemConstants;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.LoginUser;
 import cn.icatw.domain.entity.User;
+import cn.icatw.domain.entity.UserRole;
+import cn.icatw.domain.vo.AdminUserInfoVo;
+import cn.icatw.domain.vo.UserInfoVo;
 import cn.icatw.enums.AppHttpCodeEnum;
 import cn.icatw.exception.SystemException;
-import cn.icatw.service.LoginService;
+import cn.icatw.service.*;
+import cn.icatw.utils.BeanCopyUtils;
 import cn.icatw.utils.JwtUtil;
 import cn.icatw.utils.RedisCache;
+import cn.icatw.utils.SecurityUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +36,15 @@ public class SystemLoginServiceImpl implements LoginService {
     AuthenticationManager authenticationManager;
     @Autowired
     RedisCache redisCache;
+
+    @Autowired
+    MenuService menuService;
+    @Autowired
+    RoleService roleService;
+    @Autowired
+    UserRoleService userRoleService;
+    @Autowired
+    RoleMenuService roleMenuService;
 
     @Override
     public ResponseResult login(User user) {
@@ -59,5 +74,19 @@ public class SystemLoginServiceImpl implements LoginService {
     @Override
     public ResponseResult logout() {
         return null;
+    }
+
+    @Override
+    public AdminUserInfoVo getInfo(Long userId) {
+        //先根据用户id获取角色信息 user_role表
+        UserRole userRole = userRoleService.getOne(new LambdaQueryWrapper<UserRole>()
+                .eq(UserRole::getUserId, userId));
+        //再根据角色id获取菜单信息
+        //
+        AdminUserInfoVo result = new AdminUserInfoVo();
+        User userVo = SecurityUtils.getLoginUser().getUser();
+        result.setUser(BeanCopyUtils.copyBean(userVo, UserInfoVo.class));
+        //result.setPermissions()
+        return result;
     }
 }

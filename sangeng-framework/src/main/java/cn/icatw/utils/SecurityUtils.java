@@ -7,15 +7,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 /**
  * @Author 三更  B站： https://space.bilibili.com/663528522
  */
-public class SecurityUtils
-{
+public class SecurityUtils {
 
     /**
      * 获取用户
      **/
-    public static LoginUser getLoginUser()
-    {
-        return (LoginUser) getAuthentication().getPrincipal();
+    public static LoginUser getLoginUser() {
+        Object principal = getAuthentication().getPrincipal();
+        //需要登陆之后才能返回
+        //if ("anonymousUser".equals(principal)) {
+        //    throw new SystemException(AppHttpCodeEnum.NEED_LOGIN);
+        //}
+        return (LoginUser) principal;
     }
 
     /**
@@ -25,7 +28,7 @@ public class SecurityUtils
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public static Boolean isAdmin(){
+    public static Boolean isAdmin() {
         Long id = getLoginUser().getUser().getId();
         return id != null && 1L == id;
     }
