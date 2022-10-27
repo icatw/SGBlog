@@ -1,5 +1,6 @@
 package cn.icatw.controller;
 
+import cn.icatw.annotation.SysLog;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.User;
 import cn.icatw.service.UserService;
@@ -26,6 +27,7 @@ public class UserController {
     }
 
     @PutMapping("/userInfo")
+    @SysLog(businessName = "更新用户信息")
     public ResponseResult updateUserInfo(@RequestBody User user) {
         return userService.updateUserInfo(user);
     }
