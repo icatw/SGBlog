@@ -33,7 +33,7 @@ public class Tag implements Serializable {
     @ApiModelProperty("标签名")
     private String name;
 
-    @TableField(value = "create_by")
+    @TableField(value = "create_by", fill = FieldFill.INSERT)
     @ApiModelProperty("$column.comment")
     private Long createBy;
 
@@ -44,7 +44,7 @@ public class Tag implements Serializable {
     @ApiModelProperty("$column.comment")
     private Date createTime;
 
-    @TableField(value = "update_by")
+    @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty("$column.comment")
     private Long updateBy;
 

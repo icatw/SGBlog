@@ -30,8 +30,7 @@
                         sm.icon,
                         sm.order_num,
                         sm.create_time
-        from sys_role_menu srm
-                 join sys_menu sm on srm.menu_id = sm.id
+        from sys_menu sm
         where sm.menu_type in ('C', 'M')
           and sm.status = 0
           and sm.del_flag = 0;
