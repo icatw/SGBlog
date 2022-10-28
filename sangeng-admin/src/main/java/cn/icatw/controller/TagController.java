@@ -43,6 +43,8 @@ public class TagController {
         return ResponseResult.okResult(result);
     }
 
+    //@PreAuthorize()
+    //@PostAuthorize()
     @GetMapping("/listAllTag")
     public ResponseResult listAllTag() {
         List<Tag> list = tagService.list();
