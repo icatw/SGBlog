@@ -4,7 +4,9 @@ import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.dto.TagListDto;
 import cn.icatw.domain.entity.Tag;
 import cn.icatw.domain.vo.PageVo;
+import cn.icatw.domain.vo.TagVo;
 import cn.icatw.service.TagService;
+import cn.icatw.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,19 @@ import org.springframework.web.bind.annotation.*;
 public class TagController {
     @Autowired
     private TagService tagService;
+
+    @GetMapping("{id}")
+    public ResponseResult getById(@PathVariable Long id) {
+        Tag tag = tagService.getById(id);
+        TagVo tagVo = BeanCopyUtils.copyBean(tag, TagVo.class);
+        return ResponseResult.okResult(tagVo);
+    }
+
+    @PutMapping()
+    public ResponseResult updateTag(@RequestBody Tag tag) {
+        tagService.updateById(tag);
+        return ResponseResult.okResult();
+    }
 
     @GetMapping("/list")
     public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
