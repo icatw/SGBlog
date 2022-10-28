@@ -2,7 +2,9 @@ package cn.icatw.service.impl;
 
 import cn.icatw.Constants.SystemConstants;
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.AddArticleDto;
 import cn.icatw.domain.entity.Article;
+import cn.icatw.domain.entity.ArticleTag;
 import cn.icatw.domain.entity.Category;
 import cn.icatw.domain.vo.ArticleDetailVo;
 import cn.icatw.domain.vo.ArticleListVo;
@@ -11,6 +13,7 @@ import cn.icatw.domain.vo.PageVo;
 import cn.icatw.enums.AppHttpCodeEnum;
 import cn.icatw.mapper.ArticleMapper;
 import cn.icatw.service.ArticleService;
+import cn.icatw.service.ArticleTagService;
 import cn.icatw.service.CategoryService;
 import cn.icatw.utils.BeanCopyUtils;
 import cn.icatw.utils.RedisCache;
@@ -18,11 +21,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author icatw
@@ -36,6 +41,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     CategoryService categoryService;
     @Resource
     RedisCache redisCache;
+    @Resource
+    ArticleTagService articleTagService;
 
     /**
      * 热门文章列表
@@ -95,6 +102,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //参数有误!
             return ResponseResult.errorResult(AppHttpCodeEnum.Parameter_ERROR);
         }
+        //根据id查询文章
         Article article = getById(id);
         //设置分类名 TODO 非空判断
         //查询文章详情时从Redis中获取
@@ -102,6 +110,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (category != null) {
             article.setCategoryName(category.getName());
         }
+        //文章浏览量从Redis中获取
         Map<String, Integer> map = redisCache.getCacheMap(SystemConstants.VIEW_COUNT_KEY);
         if (map.containsKey(id.toString())) {
             Integer viewCount = map.get(id.toString());
@@ -114,6 +123,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult updateViewCount(Long id) {
         //更新redis中对应 id的浏览量
         redisCache.incrementCacheMapValue(SystemConstants.VIEW_COUNT_KEY, id.toString(), 1);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    @Transactional
+    public ResponseResult add(AddArticleDto articleDto) {
+        List<Long> tags = articleDto.getTags();
+        //copy基本的article属性
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        //添加文章和分类表信息 article_tag
+        //保存文章信息
+        save(article);
+        List<ArticleTag> articleTagList = tags.stream().map(tag -> {
+            ArticleTag articleTag = new ArticleTag();
+            articleTag.setTagId(tag);
+            articleTag.setArticleId(article.getId());
+            return articleTag;
+        }).collect(Collectors.toList());
+        articleTagService.saveBatch(articleTagList);
         return ResponseResult.okResult();
     }
 }

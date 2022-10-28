@@ -1,6 +1,7 @@
 package cn.icatw.service;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.AddArticleDto;
 import cn.icatw.domain.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -43,4 +44,13 @@ public interface ArticleService extends IService<Article> {
      * @return {@link ResponseResult}
      */
     ResponseResult updateViewCount(Long id);
+
+    /**
+     * 发表文章
+     *
+     * @param article 文章
+     * @return {@link ResponseResult}
+     */
+    ResponseResult add(AddArticleDto article);
+
 }

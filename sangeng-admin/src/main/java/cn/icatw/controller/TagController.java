@@ -10,6 +10,8 @@ import cn.icatw.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author icatw
  * @date 2022/10/27
@@ -38,6 +40,13 @@ public class TagController {
     @GetMapping("/list")
     public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
         PageVo result = tagService.pageList(pageNum, pageSize, tagListDto);
+        return ResponseResult.okResult(result);
+    }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag() {
+        List<Tag> list = tagService.list();
+        List<TagVo> result = BeanCopyUtils.copyBeanList(list, TagVo.class);
         return ResponseResult.okResult(result);
     }
 

@@ -21,4 +21,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
-
+oss:
+  accessKey: YLk7BIR8T6D1c2-ZmBesr9JzsbVvdMp4kxwOO7F9
+  secretKey: j2i8i0bh5FGNUACynMFpBOyM27vw0OFbc_4uxDVt
+  bucket: icatw

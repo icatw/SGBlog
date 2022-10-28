@@ -41,7 +41,7 @@ public class OssUploadServiceImpl implements UploadService {
             throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
         }
         //对原始文件名进行判断
-        if (!originalFilename.endsWith(".png")) {
+        if (!originalFilename.endsWith(".png")&&!originalFilename.endsWith(".jpg")) {
             throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
         }
 
