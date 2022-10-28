@@ -1,6 +1,7 @@
 package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.TagListDto;
 import cn.icatw.domain.vo.PageVo;
 import cn.icatw.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class TagController {
     private TagService tagService;
 
     @GetMapping("/list")
-    public ResponseResult<PageVo> list() {
-        return ResponseResult.okResult(tagService.list());
+    public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
+        PageVo result = tagService.pageList(pageNum, pageSize, tagListDto);
+        return ResponseResult.okResult(result);
     }
 }
