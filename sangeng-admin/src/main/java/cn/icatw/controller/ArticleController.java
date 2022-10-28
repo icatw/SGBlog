@@ -2,12 +2,11 @@ package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.dto.AddArticleDto;
+import cn.icatw.domain.dto.ArticleDto;
+import cn.icatw.domain.entity.Article;
 import cn.icatw.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author icatw
@@ -24,5 +23,10 @@ public class ArticleController {
     @PostMapping
     public ResponseResult add(@RequestBody AddArticleDto article) {
         return articleService.add(article);
+    }
+
+    @GetMapping("/list")
+    public ResponseResult getAllArticle(Integer pageNum, Integer pageSize, ArticleDto articleDto) {
+        return articleService.pageList(pageNum, pageSize, articleDto);
     }
 }

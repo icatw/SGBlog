@@ -3,13 +3,11 @@ package cn.icatw.service.impl;
 import cn.icatw.Constants.SystemConstants;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.dto.AddArticleDto;
+import cn.icatw.domain.dto.ArticleDto;
 import cn.icatw.domain.entity.Article;
 import cn.icatw.domain.entity.ArticleTag;
 import cn.icatw.domain.entity.Category;
-import cn.icatw.domain.vo.ArticleDetailVo;
-import cn.icatw.domain.vo.ArticleListVo;
-import cn.icatw.domain.vo.HotArticleVo;
-import cn.icatw.domain.vo.PageVo;
+import cn.icatw.domain.vo.*;
 import cn.icatw.enums.AppHttpCodeEnum;
 import cn.icatw.mapper.ArticleMapper;
 import cn.icatw.service.ArticleService;
@@ -20,6 +18,7 @@ import cn.icatw.utils.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -143,5 +142,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }).collect(Collectors.toList());
         articleTagService.saveBatch(articleTagList);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult pageList(Integer pageNum, Integer pageSize, ArticleDto articleDto) {
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        String summary = articleDto.getSummary();
+        String title = articleDto.getTitle();
+        if (!StringUtils.isEmpty(summary)) {
+            lambdaQueryWrapper.like(Article::getSummary, summary);
+        }
+        if (!StringUtils.isEmpty(title)) {
+            lambdaQueryWrapper.like(Article::getTitle, title);
+        }
+        page(page, lambdaQueryWrapper);
+        List<ArticleAdminVo> voList = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleAdminVo.class);
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(voList);
+        return ResponseResult.okResult(pageVo);
     }
 }

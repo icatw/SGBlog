@@ -2,6 +2,7 @@ package cn.icatw.service;
 
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.dto.AddArticleDto;
+import cn.icatw.domain.dto.ArticleDto;
 import cn.icatw.domain.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -53,4 +54,13 @@ public interface ArticleService extends IService<Article> {
      */
     ResponseResult add(AddArticleDto article);
 
+    /**
+     * 分页条件查询
+     *
+     * @param pageNum    页面num
+     * @param pageSize   页面大小
+     * @param articleDto 文章dto
+     * @return {@link ResponseResult}
+     */
+    ResponseResult pageList(Integer pageNum, Integer pageSize, ArticleDto articleDto);
 }
