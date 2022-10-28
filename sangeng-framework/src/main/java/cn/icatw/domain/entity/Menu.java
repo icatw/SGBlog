@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 菜单权限表(Menu)实体类
@@ -128,6 +129,8 @@ public class Menu implements Serializable {
     @ApiModelProperty("更新者")
     private Long updateBy;
 
+    @TableField(exist = false)
+    private List<Menu> children;
     /**更新时间*/
     /**
      * 修改时间

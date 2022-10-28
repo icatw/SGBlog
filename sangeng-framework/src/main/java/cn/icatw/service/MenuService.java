@@ -21,5 +21,7 @@ public interface MenuService extends IService<Menu> {
      * @return {@link List}<{@link String}>
      */
     List<String> selectPermsByUserId(Long id);
+
+    List<Menu> selectRouterMenuTreeByUserId(Long userId);
 }
 

@@ -1,15 +1,19 @@
 package cn.icatw.controller;
 
+import cn.icatw.Constants.SystemConstants;
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.LoginUser;
+import cn.icatw.domain.entity.Menu;
 import cn.icatw.domain.entity.User;
 import cn.icatw.domain.vo.AdminUserInfoVo;
+import cn.icatw.domain.vo.RoutersVo;
 import cn.icatw.domain.vo.UserInfoVo;
 import cn.icatw.enums.AppHttpCodeEnum;
 import cn.icatw.service.LoginService;
 import cn.icatw.service.MenuService;
 import cn.icatw.service.RoleService;
 import cn.icatw.utils.BeanCopyUtils;
+import cn.icatw.utils.RedisCache;
 import cn.icatw.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,13 +39,15 @@ public class LoginController {
     MenuService menuService;
     @Autowired
     RoleService roleService;
+    @Autowired
+    RedisCache redisCache;
 
     @PostMapping("/user/login")
     public ResponseResult login(@RequestBody User user) {
         return loginService.login(user);
     }
 
-    @GetMapping("/getinfo")
+    @GetMapping("/getInfo")
     public ResponseResult<AdminUserInfoVo> getInfo() {
         //获取当前登录的用户
         LoginUser loginUser = SecurityUtils.getLoginUser();
@@ -60,5 +66,22 @@ public class LoginController {
 
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
         return ResponseResult.okResult(adminUserInfoVo);
+    }
+
+    @GetMapping("getRouters")
+    public ResponseResult<RoutersVo> getRouters() {
+        Long userId = SecurityUtils.getUserId();
+        //查询menu 结果是tree的形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+        //封装数据返回
+        return ResponseResult.okResult(new RoutersVo(menus));
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout() {
+        //    清空redis用户信息
+        Long userId = SecurityUtils.getUserId();
+        redisCache.deleteObject(SystemConstants.ADMIN_LOGIN_KEY + userId);
+        return ResponseResult.okResult();
     }
 }

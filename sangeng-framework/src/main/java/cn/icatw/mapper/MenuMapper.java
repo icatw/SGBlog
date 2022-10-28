@@ -22,5 +22,20 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return {@link List}<{@link String}>
      */
     List<String> selectPermsByUserId(@Param("id") Long id);
+
+    /**
+     * 选择所有路由器菜单
+     *
+     * @return {@link List}<{@link Menu}>
+     */
+    List<Menu> selectAllRouterMenu();
+
+    /**
+     * 通过用户id选择路由器菜单树
+     *
+     * @param userId 用户id
+     * @return {@link List}<{@link Menu}>
+     */
+    List<Menu> selectRouterMenuTreeByUserId(@Param("userId") Long userId);
 }
 
