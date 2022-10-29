@@ -15,6 +15,7 @@ public class AddRoleDto {
     private String roleName;
     private String roleKey;
     private Integer roleSort;
+    private Long id;
     private String status;
     private List<Integer> menuIds;
     private String remark;

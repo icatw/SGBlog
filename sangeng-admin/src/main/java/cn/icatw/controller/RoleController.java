@@ -5,13 +5,17 @@ import cn.icatw.domain.dto.AddRoleDto;
 import cn.icatw.domain.dto.RoleDto;
 import cn.icatw.domain.dto.RoleStatusDto;
 import cn.icatw.domain.entity.Role;
+import cn.icatw.domain.entity.RoleMenu;
 import cn.icatw.domain.vo.RoleVo;
+import cn.icatw.service.RoleMenuService;
 import cn.icatw.service.RoleService;
 import cn.icatw.utils.BeanCopyUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author icatw
@@ -24,6 +28,8 @@ import javax.annotation.Resource;
 public class RoleController {
     @Resource
     RoleService roleService;
+    @Resource
+    RoleMenuService roleMenuService;
 
     @GetMapping("/list")
     public ResponseResult list(Integer pageNum, Integer pageSize, RoleDto roleDto) {
@@ -43,6 +49,19 @@ public class RoleController {
     @PostMapping
     public ResponseResult add(@RequestBody AddRoleDto roleDto) {
         roleService.add(roleDto);
+        return ResponseResult.okResult();
+    }
+
+    @PutMapping
+    public ResponseResult update(@RequestBody AddRoleDto roleDto) {
+        Role role = BeanCopyUtils.copyBean(roleDto, Role.class);
+        roleService.updateById(role);
+        List<Integer> menuIds = roleDto.getMenuIds();
+        roleMenuService.remove(new LambdaQueryWrapper<RoleMenu>()
+                .eq(RoleMenu::getRoleId, role.getId()));
+        //    先删除再添加
+        menuIds.stream().map(id -> new RoleMenu(role.getId(), id.longValue()))
+                .forEach(roleMenu -> roleMenuService.save(roleMenu));
         return ResponseResult.okResult();
     }
 
