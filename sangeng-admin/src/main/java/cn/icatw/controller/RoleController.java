@@ -5,7 +5,9 @@ import cn.icatw.domain.dto.AddRoleDto;
 import cn.icatw.domain.dto.RoleDto;
 import cn.icatw.domain.dto.RoleStatusDto;
 import cn.icatw.domain.entity.Role;
+import cn.icatw.domain.vo.RoleVo;
 import cn.icatw.service.RoleService;
+import cn.icatw.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +44,12 @@ public class RoleController {
     public ResponseResult add(@RequestBody AddRoleDto roleDto) {
         roleService.add(roleDto);
         return ResponseResult.okResult();
+    }
+
+    @GetMapping("{id}")
+    public ResponseResult getById(@PathVariable Long id) {
+        Role role = roleService.getById(id);
+        RoleVo result = BeanCopyUtils.copyBean(role, RoleVo.class);
+        return ResponseResult.okResult(result);
     }
 }

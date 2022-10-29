@@ -15,4 +15,5 @@ public class RoleVo {
     private String roleName;
     private Integer roleSort;
     private String status;
+    private String remark;
 }
