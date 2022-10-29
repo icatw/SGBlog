@@ -2,6 +2,9 @@ package cn.icatw.mapper;
 
 import cn.icatw.domain.entity.RoleMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 
 /**
@@ -12,5 +15,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 
+    /**
+     * 被角色菜单ids id
+     *
+     * @param id id
+     * @return {@link List}<{@link Long}>
+     */
+    List<Long> getMenuIdsByRoleId(@Param("id") Long id);
 }
 

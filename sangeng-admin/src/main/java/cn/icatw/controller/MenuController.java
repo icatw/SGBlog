@@ -4,6 +4,7 @@ import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.Menu;
 import cn.icatw.domain.vo.MenuTreeVo;
 import cn.icatw.domain.vo.MenuVo;
+import cn.icatw.domain.vo.MenusCheckedKeysVo;
 import cn.icatw.service.MenuService;
 import cn.icatw.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -78,6 +79,12 @@ public class MenuController {
     @GetMapping("/treeselect")
     public ResponseResult treeselect() {
         List<MenuTreeVo> result = menuService.treeselect();
+        return ResponseResult.okResult(result);
+    }
+
+    @GetMapping("/roleMenuTreeselect/{id}")
+    public ResponseResult roleMenuTreeselect(@PathVariable Long id) {
+        MenusCheckedKeysVo result = menuService.roleMenuTreeselect(id);
         return ResponseResult.okResult(result);
     }
 }

@@ -3,13 +3,16 @@ package cn.icatw.service.impl;
 import cn.icatw.Constants.SystemConstants;
 import cn.icatw.domain.entity.Menu;
 import cn.icatw.domain.vo.MenuTreeVo;
+import cn.icatw.domain.vo.MenusCheckedKeysVo;
 import cn.icatw.mapper.MenuMapper;
+import cn.icatw.mapper.RoleMenuMapper;
 import cn.icatw.service.MenuService;
 import cn.icatw.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +25,9 @@ import java.util.stream.Collectors;
  */
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+    @Resource
+    RoleMenuMapper roleMenuMapper;
+
     @Override
     public List<String> selectPermsByUserId(Long id) {
         //如果是管理员，返回所有的权限
@@ -59,6 +65,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<MenuTreeVo> treeselect() {
         return getMenuTreeSelect();
+    }
+
+    @Override
+    public MenusCheckedKeysVo roleMenuTreeselect(Long id) {
+        List<MenuTreeVo> menus = getMenuTreeSelect();
+        List<Long> checkedKeys = roleMenuMapper.getMenuIdsByRoleId(id);
+        return new MenusCheckedKeysVo(menus,checkedKeys);
     }
 
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {
