@@ -1,5 +1,7 @@
 package cn.icatw.service;
 
+import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.RoleDto;
 import cn.icatw.domain.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,5 +23,7 @@ public interface RoleService extends IService<Role> {
      * @return {@link List}<{@link String}>
      */
     List<String> selectRoleKeyByUserId(Long id);
+
+    ResponseResult pageList(Integer pageNum, Integer pageSize, RoleDto roleDto);
 }
 
