@@ -2,6 +2,7 @@ package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
 import cn.icatw.domain.entity.Menu;
+import cn.icatw.domain.vo.MenuTreeVo;
 import cn.icatw.domain.vo.MenuVo;
 import cn.icatw.service.MenuService;
 import cn.icatw.utils.BeanCopyUtils;
@@ -72,5 +73,11 @@ public class MenuController {
         }
         menuService.removeById(id);
         return ResponseResult.okResult();
+    }
+
+    @GetMapping("/treeselect")
+    public ResponseResult treeselect() {
+        List<MenuTreeVo> result = menuService.treeselect();
+        return ResponseResult.okResult(result);
     }
 }

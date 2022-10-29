@@ -1,6 +1,7 @@
 package cn.icatw.service;
 
 import cn.icatw.domain.entity.Menu;
+import cn.icatw.domain.vo.MenuTreeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface MenuService extends IService<Menu> {
     List<String> selectPermsByUserId(Long id);
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
+
+    List<MenuTreeVo> treeselect();
 }
 
