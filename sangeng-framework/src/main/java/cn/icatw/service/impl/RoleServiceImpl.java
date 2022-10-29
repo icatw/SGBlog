@@ -1,11 +1,14 @@
 package cn.icatw.service.impl;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.AddRoleDto;
 import cn.icatw.domain.dto.RoleDto;
 import cn.icatw.domain.entity.Role;
+import cn.icatw.domain.entity.RoleMenu;
 import cn.icatw.domain.vo.PageVo;
 import cn.icatw.domain.vo.RoleVo;
 import cn.icatw.mapper.RoleMapper;
+import cn.icatw.service.RoleMenuService;
 import cn.icatw.service.RoleService;
 import cn.icatw.utils.BeanCopyUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,8 +17,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色信息表(Role)表服务实现类
@@ -25,6 +30,8 @@ import java.util.List;
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+    @Resource
+    RoleMenuService roleMenuService;
 
     @Override
     public List<String> selectRoleKeyByUserId(Long id) {
@@ -57,6 +64,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         pageVo.setRows(roleVos);
         pageVo.setTotal(page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public void add(AddRoleDto roleDto) {
+        Role role = BeanCopyUtils.copyBean(roleDto, Role.class);
+        save(role);
+        //    保存角色菜单信息
+        List<Integer> menuIds = roleDto.getMenuIds();
+        List<RoleMenu> list = menuIds.stream().map(id -> new RoleMenu(role.getId(), id.longValue()))
+                .collect(Collectors.toList());
+        roleMenuService.saveBatch(list);
     }
 }
 

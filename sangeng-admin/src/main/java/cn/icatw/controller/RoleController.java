@@ -1,6 +1,7 @@
 package cn.icatw.controller;
 
 import cn.icatw.domain.ResponseResult;
+import cn.icatw.domain.dto.AddRoleDto;
 import cn.icatw.domain.dto.RoleDto;
 import cn.icatw.domain.dto.RoleStatusDto;
 import cn.icatw.domain.entity.Role;
@@ -34,6 +35,12 @@ public class RoleController {
         lambdaUpdateWrapper.eq(Role::getId, roleStatusDto.getRoleId())
                 .set(Role::getStatus, roleStatusDto.getStatus());
         roleService.update(lambdaUpdateWrapper);
+        return ResponseResult.okResult();
+    }
+
+    @PostMapping
+    public ResponseResult add(@RequestBody AddRoleDto roleDto) {
+        roleService.add(roleDto);
         return ResponseResult.okResult();
     }
 }
