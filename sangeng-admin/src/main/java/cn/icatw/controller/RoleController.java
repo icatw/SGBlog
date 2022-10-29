@@ -71,4 +71,10 @@ public class RoleController {
         RoleVo result = BeanCopyUtils.copyBean(role, RoleVo.class);
         return ResponseResult.okResult(result);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseResult deleteById(@PathVariable Long id) {
+        roleService.removeById(id);
+        return ResponseResult.okResult();
+    }
 }
